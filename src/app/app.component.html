@@ -1,20 +1,56 @@
+{{ htmlWithBold }}
 
-
-{{ model }}
-
-
+<br />
+<button (click)="getContentAsHtml()">Get Value</button>
 <div class="quill " style="width: 100%;">
   <div class="ql-toolbar ql-snow">
     <span class="ql-formats">
-      <button type="button" class="ql-header" value="1" (click)="BoldText('bold')">
+      <button type="button" class="ql-header" value="1" (click)="fontStyle('bold')">
         <i class="fa-solid fa-bold"></i>
       </button>
+      <button type="button" class="ql-header" value="1" (click)="fontStyle('italic')">
+        <i class="fa-solid fa-italic"></i>
+      </button>
+      <button type="button" class="ql-header" value="1" (click)="fontStyle('strikethrough')">
+        <i class="fa-solid fa-strikethrough"></i>
+      </button>
+      <button type="button" class="ql-header" value="1" (click)="indentOutdentCommand('indent')">
+        <i class="fa-solid fa-indent"></i>
+      </button>
+      <button type="button" class="ql-header" value="1" (click)="indentOutdentCommand('outdent')">
+        <i class="fa-solid fa-outdent"></i>
+      </button>
+      <!-- <button type="button" class="ql-header" value="1" (click)="insertQuote()">
+        <i class="fa-solid fa-quote-right"></i>
+      </button> -->
+      <button type="button" class="ql-header" value="1" (click)="insertQuote()">
+        <i class="fa-solid fa-link"></i>
+      </button>
+      <button type="button" class="ql-header" value="1" (click)="insertTable()">
+        <i class="fa-solid fa-table"></i>
+      </button>
+
+      <select #dropDawn style="margin-top: 3px;" class="ql-header" (change)="setHeader($event)">
+        <option value="h1">H1</option>
+        <option value="h2">H2</option>
+        <option value="h3">H3</option>
+        <option value="h4">H4</option>
+        <option value="h5">H5</option>
+        <option value="h6">H6</option>
+      </select>
+
     </span>
   </div>
 </div>
 
 
-<div  class="ql-container ql-snow" style="height: 500px;">
-  <div id="myEditor" class="ql-editor ql-blank" data-gramm="false"  (mouseup)="onMouseUp()" contenteditable="true" spellcheck="true">
+<div class="ql-container ql-snow" style="height: 500px;" [formGroup]="htmlForm">
+  <div #editor id="myEditor" class="ql-editor ql-blank" data-gramm="false" formControlName="htmlContent"
+    contenteditable="true" spellcheck="true">
+
   </div>
 </div>
+
+<br>
+<button (click)="generateReport()">Generate Report</button>
+<div [innerHtml]="reportHtml"></div>
