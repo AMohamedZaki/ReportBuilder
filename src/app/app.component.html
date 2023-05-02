@@ -45,12 +45,12 @@
 
 
 <div class="ql-container ql-snow" style="height: 500px;" [formGroup]="htmlForm">
-  <div #editor id="myEditor" class="ql-editor ql-blank" data-gramm="false" formControlName="htmlContent"
-    contenteditable="true" spellcheck="true">
-
+  <div #editor id="myEditor" class="ql-editor ql-blank" data-gramm="false"
+    contenteditable="true" spellcheck="true" (paste)="onPaste($event)">
   </div>
 </div>
 
+
 <br>
 <button (click)="generateReport()">Generate Report</button>
-<div [innerHtml]="reportHtml"></div>
+

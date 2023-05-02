@@ -1,6 +1,9 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { SafeHtml } from '@angular/platform-browser';
+
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-root',
@@ -24,8 +27,7 @@ export class AppComponent implements OnInit {
   report: string = '';
   reportHtml: SafeHtml = '';
 
-  constructor(private renderer: Renderer2, private sanitizer: DomSanitizer) {
-
+  constructor() {
   }
 
   get htmlContent(): FormControl {
@@ -130,29 +132,121 @@ export class AppComponent implements OnInit {
     // Update the value of this.report whenever the content of the element changes
     this.report = report;
   }
-  
+
   generateReport() {
-    debugger
-    // Get the HTML content of the element
-    const reportHtml = this.report;
+    // const reportHtml = this.report;
+    // const sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(reportHtml);
+    // const report = this.processReport(reportHtml);
+    // this.reportHtml = sanitizedHtml;
+    
+    const element = <HTMLElement>document.getElementById('myEditor');
 
-    // Sanitize the HTML content to ensure that it is safe to use in your report
-    const sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(reportHtml);
+    html2canvas(element,  { scale: 3, useCORS: true }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+      pdf.save('report.pdf');
+    });
 
-    // Process the HTML content and generate a report
-    const report = this.processReport(reportHtml);
-
-    // Set the reportHtml variable to display the generated report in your template
-    this.reportHtml = sanitizedHtml;
   }
 
   processReport(reportHtml: string): string {
-    // Process the HTML content and generate a report
     return 'Report generated from HTML content: ' + reportHtml;
   }
 
+
+  onPaste(event: any) {
+    const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    for (const item of items) {
+      if (item.type.indexOf('image') === 0) {
+        const blob = item.getAsFile();
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = (loadEvent: any) => {
+          this.insertImage(loadEvent.target.result);
+          // document.execCommand('insertHTML', false, img.outerHTML);
+        };
+      }
+    }
+  }
+
+  insertImage(src: string) {
+    const img = document.createElement('img');
+    // img.src = loadEvent.;
+    img.src = src;
+    img.width = 200;
+    img.height = 200;
+    const wrapper = document.createElement('div');
+    wrapper.contentEditable = 'true';
+    wrapper.style.display = 'inline-block';
+    wrapper.style.position = 'relative';
+    wrapper.style.minWidth = '10px';
+    wrapper.style.minHeight = '10px';
+    wrapper.style.outline = 'none';
+
+    img.addEventListener('mousedown', (event) => {
+      this.onImageMouseDown(event, img, wrapper);
+    });
+
+
+    wrapper.appendChild(img);
+
+    this.editor.nativeElement.appendChild(wrapper);
+  }
+
+
+
+  onImageMouseDown(event: MouseEvent, img: HTMLImageElement, wrapper: HTMLDivElement) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    let startX = event.clientX;
+    let startY = event.clientY;
+    let startWidth = img.width;
+    let startHeight = img.height;
+
+    img.style.border = '2px solid blue';
+    img.style.cursor = 'nwse-resize';
+
+
+    const rect = wrapper.getBoundingClientRect();
+    const marginX = event.clientX - rect.right > -10 ? 1 : event.clientX - rect.left < 10 ? -1 : 0;
+    const marginY = event.clientY - rect.bottom > -10 ? 1 : event.clientY - rect.top < 10 ? -1 : 0;
+    if (marginX === 0 && marginY === 0) {
+      return;
+    }
+
+    const onMouseMove = (event: MouseEvent) => {
+     
+      // const deltaX = event.clientX - startX;
+      // const deltaY = event.clientY - startY;
+      // img.style.width = startWidth + deltaX + 'px';
+      // img.style.height = startHeight + deltaY + 'px';
+
+      const width = startWidth + event.clientX - startX;
+      const height = startHeight + event.clientY - startY;
+      if (width > 10 && height > 10) {
+        img.width = width;
+        img.height = height;
+      }
+
+    };
+
+    const onMouseUp = (event: MouseEvent) => {
+    
+      event.stopPropagation();
+      img.style.border = 'none';
+      img.style.cursor = 'default';
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }
+  
+
 }
-
-
 
 

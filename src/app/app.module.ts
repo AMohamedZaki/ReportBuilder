@@ -4,14 +4,12 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ImageResizerDirective } from './Directive/image-resizer.directive';
 
 // import { ContentEditableModelModule } from '@ngneat/content-editable';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    ImageResizerDirective
+    AppComponent
   ],
   imports: [
     BrowserModule,
