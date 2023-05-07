@@ -4,18 +4,33 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { TableSettingComponent } from './Dialogs/table-setting/table-setting.component';
 
+import { MatDialogModule } from '@angular/material/dialog';
+import { ColorPickerComponent } from './components/color-picker/color-picker.component';
+import { FontColorComponent } from './components/font-color/font-color.component';
 // import { ContentEditableModelModule } from '@ngneat/content-editable';
+
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TableSettingComponent,
+    ColorPickerComponent,
+    FontColorComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+    MatDialogModule,
+    MatMenuModule,
+    MatButtonModule,
+    BrowserAnimationsModule
     // ContentEditableModelModule
   ],
   providers: [],

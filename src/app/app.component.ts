@@ -1,9 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { SafeHtml } from '@angular/platform-browser';
 
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { TableSettingComponent } from './Dialogs/table-setting/table-setting.component';
+import { OverlayConfig } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-root',
@@ -12,26 +13,18 @@ import html2canvas from 'html2canvas';
 })
 export class AppComponent implements OnInit {
   title = 'TextEditor';
-  isEdit = true;
-  htmlForm = new FormGroup({
-    htmlContent: new FormControl()
-  });
 
   @ViewChild('editor') editor: ElementRef = {} as ElementRef<any>;
   @ViewChild('columnToResize') columnToResize = {} as any;
-  editorContent = '';
   htmlWithBold = '';
-  isResizing = false;
-  initialWidth = 0;
+  displayFontColorDisplayed = false;
 
-  report: string = '';
-  reportHtml: SafeHtml = '';
+  colors = ['#0e0e0e', '#f7f7f7', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#ff00ff'];
+  selectedColor = '';
+  dispalyColorPicker = false;
 
-  constructor() {
-  }
 
-  get htmlContent(): FormControl {
-    return this.htmlForm.get('htmlContent') as FormControl;
+  constructor(public dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -61,6 +54,30 @@ export class AppComponent implements OnInit {
     this.editor.nativeElement.focus();
   }
 
+  openDialog() {
+
+    const overlayConfig = new OverlayConfig({
+      hasBackdrop: true,
+      backdropClass: 'cdk-overlay-transparent-backdrop'
+    });
+
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.position = {
+      left: '100px',
+      top: '1px'
+    };
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.restoreFocus = false;
+
+    const dialogRef = this.dialog.open(TableSettingComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+
   insertTable() {
     const table = document.createElement('table');
     table.border = '1';
@@ -83,6 +100,7 @@ export class AppComponent implements OnInit {
 
       const dataCell1 = document.createElement('td');
       dataCell1.textContent = '';
+      // dataCell1.style.width = 
       const dataCell2 = document.createElement('td');
       dataCell2.textContent = '';
       dataRow.appendChild(dataCell1);
@@ -103,57 +121,31 @@ export class AppComponent implements OnInit {
     document.execCommand(font, false);
   }
 
-  // onMouseUp(): void {
-  //   const selection = <Selection>window.getSelection();
-  //   if (selection && selection.toString()) {
-  //     const focusNode = <Node>selection.focusNode;
-  //     const element = <HTMLElement>focusNode.parentElement;
-  //     const isBold = this.isFontBold(element);
-  //     console.log(`The selected text is ${isBold ? 'bold' : 'not bold'}`);
-  //   }
-  // }
-
   isFontBold(element: HTMLElement): boolean {
     const fontWeight = window.getComputedStyle(element).getPropertyValue('font-weight');
     return fontWeight === 'bold' || parseInt(fontWeight, 10) >= 700;
   }
-
-
 
   public getContentAsHtml(): void {
     this.htmlWithBold = '';
     const contentElement = document.createElement('div');
     contentElement.innerHTML = this.editor.nativeElement.innerHTML;
     this.htmlWithBold = contentElement.innerHTML;
+    console.log(this.htmlWithBold);
   }
 
-
-  updateReport(report: string) {
-    // Update the value of this.report whenever the content of the element changes
-    this.report = report;
-  }
 
   generateReport() {
-    // const reportHtml = this.report;
-    // const sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(reportHtml);
-    // const report = this.processReport(reportHtml);
-    // this.reportHtml = sanitizedHtml;
-    
     const element = <HTMLElement>document.getElementById('myEditor');
 
-    html2canvas(element,  { scale: 3, useCORS: true }).then(canvas => {
+    html2canvas(element, { scale: 3, useCORS: true }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF();
       pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
-      pdf.save('report.pdf');
+      pdf.save(`${new Date().getTime().toString() + new Date().getMilliseconds().toString()}.pdf`);
     });
 
   }
-
-  processReport(reportHtml: string): string {
-    return 'Report generated from HTML content: ' + reportHtml;
-  }
-
 
   onPaste(event: any) {
     const items = (event.clipboardData || event.originalEvent.clipboardData).items;
@@ -194,8 +186,6 @@ export class AppComponent implements OnInit {
     this.editor.nativeElement.appendChild(wrapper);
   }
 
-
-
   onImageMouseDown(event: MouseEvent, img: HTMLImageElement, wrapper: HTMLDivElement) {
     event.preventDefault();
     event.stopPropagation();
@@ -217,7 +207,7 @@ export class AppComponent implements OnInit {
     }
 
     const onMouseMove = (event: MouseEvent) => {
-     
+
       // const deltaX = event.clientX - startX;
       // const deltaY = event.clientY - startY;
       // img.style.width = startWidth + deltaX + 'px';
@@ -233,7 +223,7 @@ export class AppComponent implements OnInit {
     };
 
     const onMouseUp = (event: MouseEvent) => {
-    
+
       event.stopPropagation();
       img.style.border = 'none';
       img.style.cursor = 'default';
@@ -245,8 +235,20 @@ export class AppComponent implements OnInit {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   }
-  
 
+  setColor(color: string) {
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed) {
+      const range = selection.getRangeAt(0);
+      const span = document.createElement('span');
+      span.style.color = color;
+      range.surroundContents(span);
+    }
+  }
+
+  showColorPicker() {
+    this.dispalyColorPicker = !this.dispalyColorPicker;
+  }
 }
 
 
