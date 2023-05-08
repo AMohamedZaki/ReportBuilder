@@ -31,6 +31,9 @@
             ],
             "styles": [
               "src/styles.scss",
+              "src/assets/light.scss",
+              "node_modules/quill/dist/quill.snow.css",
+              "node_modules/quill/dist/quill.bubble.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
             ],
             "scripts": []

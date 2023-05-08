@@ -14,13 +14,17 @@ import { FontColorComponent } from './components/font-color/font-color.component
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NewEditorComponent } from './Pages/new-editor/new-editor.component';
+import { OldEditorComponent } from './Pages/old-editor/old-editor.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TableSettingComponent,
     ColorPickerComponent,
-    FontColorComponent
+    FontColorComponent,
+    NewEditorComponent,
+    OldEditorComponent
   ],
   imports: [
     BrowserModule,

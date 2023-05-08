@@ -1,7 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { OldEditorComponent } from './Pages/old-editor/old-editor.component';
+import { NewEditorComponent } from './Pages/new-editor/new-editor.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: '', 
+    component: OldEditorComponent,
+  },
+  {
+    path: 'new',
+    component: NewEditorComponent
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
