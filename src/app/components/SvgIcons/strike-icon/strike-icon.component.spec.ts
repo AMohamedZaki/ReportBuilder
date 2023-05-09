@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FontColorComponent } from './font-color.component';
+import { StrikeIconComponent } from './strike-icon.component';
 
-describe('FontColorComponent', () => {
-  let component: FontColorComponent;
-  let fixture: ComponentFixture<FontColorComponent>;
+describe('StrikeIconComponent', () => {
+  let component: StrikeIconComponent;
+  let fixture: ComponentFixture<StrikeIconComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FontColorComponent ]
+      declarations: [ StrikeIconComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FontColorComponent);
+    fixture = TestBed.createComponent(StrikeIconComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
