@@ -7,13 +7,14 @@
     <span class="ql-picker-options" aria-hidden="true" tabindex="-1"
         id="ql-picker-options-3">
      
-        <span tabindex="0" 
+        <span tabindex="0"
+        (click)="onColorChange(color)" 
         role="button" 
         class="ql-picker-item ql-primary" 
         *ngFor="let color of colors" [attr.data-value]="color"
         [style.background-color]="color"
         ></span>    
 </span>
-<select class="ql-background" style="display: none;">
+<select class="ql-background" style="display: none;"  (change)="onColorChange($event.toString())">
     <option *ngFor="let color of colors" [value]="color"></option>
 </select>
