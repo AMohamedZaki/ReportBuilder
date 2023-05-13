@@ -22,18 +22,21 @@
 
             <!-- (click)="setColor(color)" -->
             <span class="ql-formats">
-                <app-color-picker>
-                    <ng-container class="icon">
-                        <app-font-icon></app-font-icon>
-                    </ng-container>
-                </app-color-picker>
+                <button type="button">
+                    <app-color-picker (OnColorClick)="setColor($event.toString())">
+                        <ng-container class="icon">
+                            <app-font-icon></app-font-icon>
+                        </ng-container>
+                    </app-color-picker>
+                </button>
+                <button type="button">
+                    <app-color-picker (OnColorClick)="setColor($event.toString(), false)">
+                        <ng-container class="icon">
+                            <app-font-background></app-font-background>
+                        </ng-container>
+                    </app-color-picker>
+                </button>
 
-                <app-color-picker>
-                    <ng-container class="icon">
-                        <app-font-background></app-font-background>
-                    </ng-container>
-                </app-color-picker>
-                
             </span>
 
             <span class="ql-formats">
@@ -44,11 +47,11 @@
                     <app-header-two></app-header-two>
                 </button>
                 <!-- <button class="ql-blockquote" type="button">
-                    <app-blockquote-icon></app-blockquote-icon>
-                </button> -->
-                <button type="button" class="ql-header" value="1">
+                        <app-blockquote-icon></app-blockquote-icon>
+                    </button> -->
+                <button (click)="openDialog()" type="button" class="ql-header" value="1">
                     <i class="fa-solid fa-table"></i>
-                  </button>
+                </button>
 
                 <button class="ql-image" type="button">
                     <app-image-icon></app-image-icon>
@@ -57,8 +60,7 @@
         </div>
     </div>
 </div>
-<div id="quill-editor" class="ql-container ql-snow ql-editor" #editor contenteditable="true" spellcheck="true"
-(paste)="onPaste($event)">
+<div (mouseup)="onTextSelection()" id="quill-editor" class="ql-container ql-snow ql-editor" #editor
+    contenteditable="true" spellcheck="true" (paste)="onPaste($event)">
 </div>
-
 <!-- remove ql-blank when typing-->

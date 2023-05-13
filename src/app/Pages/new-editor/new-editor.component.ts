@@ -1,10 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { TableSettingComponent } from 'src/app/Dialogs/table-setting/table-setting.component';
+import { ColorPickerComponent } from 'src/app/components/color-picker/color-picker.component';
+import { CloneObject } from 'src/app/Helper/helper';
 
 
 
@@ -13,19 +15,25 @@ import { TableSettingComponent } from 'src/app/Dialogs/table-setting/table-setti
   templateUrl: './new-editor.component.html',
   styleUrls: ['./new-editor.component.scss']
 })
-export class NewEditorComponent implements OnInit{
+export class NewEditorComponent implements OnInit {
 
   title = 'TextEditor';
 
   @ViewChild('editor') editor: ElementRef = {} as ElementRef<any>;
+  @ViewChild('fontcolor') fontcolor: ColorPickerComponent = {} as ColorPickerComponent;
   @ViewChild('columnToResize') columnToResize = {} as any;
   htmlWithBold = '';
   displayFontColorDisplayed = false;
   selectedColor = '';
-  dispalyColorPicker = false;
+  displayColorPicker = false;
+
+  selectedText: string = '';
+  selectionStartOffset: number = 0;
+  selectionEndOffset: number = 0;
+  selection: Selection = {} as Selection;
 
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog, private elementRef: ElementRef) {
   }
 
   ngOnInit(): void {
@@ -224,11 +232,9 @@ export class NewEditorComponent implements OnInit{
     };
 
     const onMouseUp = (event: MouseEvent) => {
-
       event.stopPropagation();
       img.style.border = 'none';
       img.style.cursor = 'default';
-
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
@@ -237,18 +243,45 @@ export class NewEditorComponent implements OnInit{
     document.addEventListener('mouseup', onMouseUp);
   }
 
-  setColor(color: string) {
+  setColor(color: any, font = true) {
     const selection = window.getSelection();
-    if (selection && !selection.isCollapsed) {
+    if (selection && !selection.isCollapsed && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
+
+      // Remove all span elements (in case the selected text contains span)
+      this.removeInnerSpan(range);
+
       const span = document.createElement('span');
-      span.style.color = color;
+      if (font) {
+        span.style.color = color;
+      } else {
+        span.style.backgroundColor = color;
+      }
       range.surroundContents(span);
+      this.editor.nativeElement.focus();
     }
   }
 
+  private removeInnerSpan(range: Range) {
+    // Check if the selected text is contained within a span element
+    const textNode = document.createTextNode(range.toString());
+    // Delete the contents of the range
+    range.deleteContents();
+    // Insert the new text node at the start of the range
+    range.insertNode(textNode);
+    
+  }
+
   showColorPicker() {
-    this.dispalyColorPicker = !this.dispalyColorPicker;
+    this.displayColorPicker = !this.displayColorPicker;
+  }
+
+  onTextSelection() {
+    const selection = <Selection>this.editor.nativeElement.ownerDocument.getSelection();
+    if (selection.toString()) {
+      this.selection = selection;
+      this.selectedText = selection.toString();
+    }
   }
 }
 

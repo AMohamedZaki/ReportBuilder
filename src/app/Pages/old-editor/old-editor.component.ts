@@ -20,7 +20,7 @@ export class OldEditorComponent {
   htmlWithBold = '';
   displayFontColorDisplayed = false;
 
-  colors = ['#0e0e0e', '#f7f7f7', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#ff00ff'];
+  colors = ['#0000ff','#0e0e0e', '#f7f7f7', '#ff0000', '#00ff00', '#ffff00', '#00ffff', '#ff00ff'];
   selectedColor = '';
   dispalyColorPicker = false;
 
