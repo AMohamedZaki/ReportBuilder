@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -7,6 +7,8 @@ import { OverlayConfig } from '@angular/cdk/overlay';
 import { TableSettingComponent } from 'src/app/Dialogs/table-setting/table-setting.component';
 import { ColorPickerComponent } from 'src/app/components/color-picker/color-picker.component';
 import { CloneObject } from 'src/app/Helper/helper';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TableSetting } from 'src/app/Model/TableSetting';
 
 
 
@@ -27,13 +29,9 @@ export class NewEditorComponent implements OnInit {
   selectedColor = '';
   displayColorPicker = false;
 
-  selectedText: string = '';
-  selectionStartOffset: number = 0;
-  selectionEndOffset: number = 0;
-  selection: Selection = {} as Selection;
 
 
-  constructor(public dialog: MatDialog, private elementRef: ElementRef) {
+  constructor(public dialog: MatDialog, private modalService: NgbModal) {
   }
 
   ngOnInit(): void {
@@ -65,55 +63,43 @@ export class NewEditorComponent implements OnInit {
 
   openDialog() {
 
-    const overlayConfig = new OverlayConfig({
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop'
+    const modalRef = this.modalService.open(TableSettingComponent, { size: 'xl', scrollable: true });
+    modalRef.result.then((result: TableSetting) => {
+      this.insertTable(result);
+    }, (err) => {
+      return false;
     });
 
-
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.position = {
-      left: '100px',
-      top: '1px'
-    };
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.restoreFocus = false;
-
-    const dialogRef = this.dialog.open(TableSettingComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
   }
 
 
-  insertTable() {
+  insertTable(result: TableSetting) {
+    debugger
     const table = document.createElement('table');
-    table.border = '1';
+    table.style.setProperty('border', `${result.borderSize}px ${result.borderStyle} ${result.borderColor}`);
+    table.style.setProperty('min-width', `${result.tableWidth}px`);
+    table.style.setProperty('min-height', `${result.tableHeight}px`);
+    table.style.setProperty('color', `${result.color}`);
+    table.style.setProperty('background-color', `${result.backgroundColor}`);
 
-    const headerRow = document.createElement('tr');
-    headerRow.style.backgroundColor = 'lightgray';
-
-    const headerCell1 = document.createElement('th');
-    headerCell1.textContent = '';
-
-    const headerCell2 = document.createElement('th');
-    headerCell2.textContent = '';
-    headerRow.appendChild(headerCell1);
-    headerRow.appendChild(headerCell2);
-
-    table.appendChild(headerRow);
-
-    for (let i = 0; i < 3; i++) {
+    for (let rowIndex = 0; rowIndex < result.rowsCount; rowIndex++) {
       const dataRow = document.createElement('tr');
+      dataRow.style.setProperty('border', `${result.borderSize}px ${result.borderStyle} ${result.borderColor}`);
 
-      const dataCell1 = document.createElement('td');
-      dataCell1.textContent = '';
-      // dataCell1.style.width = 
-      const dataCell2 = document.createElement('td');
-      dataCell2.textContent = '';
-      dataRow.appendChild(dataCell1);
-      dataRow.appendChild(dataCell2);
+      // Add td For Each tr
+      for (let columnIndex = 0; columnIndex < result.columnsCount; columnIndex++) {
+        const cellType = (columnIndex == 0) ? 'th' : 'td';
+        const dataCell = document.createElement(cellType);
+        dataCell.textContent = '';
+
+        if (columnIndex == 0) {
+          dataCell.style.setProperty('width', `${result.columnWidth}px`)
+          dataCell.style.setProperty('height', `${result.cellHeight}px`)
+        }
+
+        dataCell.style.setProperty('border', `${result.borderSize}px ${result.borderStyle} ${result.borderColor}`);
+        dataRow.appendChild(dataCell);
+      }
 
       table.appendChild(dataRow);
     }
@@ -141,19 +127,6 @@ export class NewEditorComponent implements OnInit {
     contentElement.innerHTML = this.editor.nativeElement.innerHTML;
     this.htmlWithBold = contentElement.innerHTML;
     console.log(this.htmlWithBold);
-  }
-
-
-  generateReport() {
-    const element = <HTMLElement>document.getElementById('myEditor');
-
-    html2canvas(element, { scale: 3, useCORS: true }).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
-      pdf.save(`${new Date().getTime().toString() + new Date().getMilliseconds().toString()}.pdf`);
-    });
-
   }
 
   onPaste(event: any) {
@@ -216,19 +189,12 @@ export class NewEditorComponent implements OnInit {
     }
 
     const onMouseMove = (event: MouseEvent) => {
-
-      // const deltaX = event.clientX - startX;
-      // const deltaY = event.clientY - startY;
-      // img.style.width = startWidth + deltaX + 'px';
-      // img.style.height = startHeight + deltaY + 'px';
-
       const width = startWidth + event.clientX - startX;
       const height = startHeight + event.clientY - startY;
       if (width > 10 && height > 10) {
         img.width = width;
         img.height = height;
       }
-
     };
 
     const onMouseUp = (event: MouseEvent) => {
@@ -269,20 +235,15 @@ export class NewEditorComponent implements OnInit {
     range.deleteContents();
     // Insert the new text node at the start of the range
     range.insertNode(textNode);
+
+  }
+
+
+
+  print() {
     
   }
 
-  showColorPicker() {
-    this.displayColorPicker = !this.displayColorPicker;
-  }
-
-  onTextSelection() {
-    const selection = <Selection>this.editor.nativeElement.ownerDocument.getSelection();
-    if (selection.toString()) {
-      this.selection = selection;
-      this.selectedText = selection.toString();
-    }
-  }
 }
 
 

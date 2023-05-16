@@ -27,6 +27,8 @@ import { HeaderOneComponent } from './components/SvgIcons/header-one/header-one.
 import { HeaderTwoComponent } from './components/SvgIcons/header-two/header-two.component';
 import { BlockquoteIconComponent } from './components/SvgIcons/blockquote-icon/blockquote-icon.component';
 import { ImageIconComponent } from './components/SvgIcons/image-icon/image-icon.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { StylePropComponent } from './components/style-prop/style-prop.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,8 @@ import { ImageIconComponent } from './components/SvgIcons/image-icon/image-icon.
     HeaderOneComponent,
     HeaderTwoComponent,
     BlockquoteIconComponent,
-    ImageIconComponent
+    ImageIconComponent,
+    StylePropComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +59,8 @@ import { ImageIconComponent } from './components/SvgIcons/image-icon/image-icon.
     MatDialogModule,
     MatMenuModule,
     MatButtonModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgbModule
     // ContentEditableModelModule
   ],
   providers: [],

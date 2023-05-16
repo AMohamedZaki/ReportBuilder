@@ -6,12 +6,12 @@ import { NewEditorComponent } from './Pages/new-editor/new-editor.component';
 const routes: Routes = [
   {
     path: '', 
-    component: OldEditorComponent,
+    component: NewEditorComponent,
   },
   {
-    path: 'new',
-    component: NewEditorComponent
-  }
+    path: 'old', 
+    component: OldEditorComponent,
+  },
 ];
 
 @NgModule({

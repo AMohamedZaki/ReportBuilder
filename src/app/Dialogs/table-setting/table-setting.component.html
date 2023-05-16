@@ -1,0 +1,73 @@
+<div class="container" style="overflow-y: auto;">
+    <div class="col-md-12 col-lg-12">
+        <h4 class="mb-3">Table Setting</h4>
+        <h4 class="mb-3">Columns Setting</h4>
+        <form [formGroup]="formGroup" class="needs-validation" novalidate="">
+            <div class="row g-3">
+                
+                <div class="col-sm-6">
+                    <label for="columnsCount" class="form-label">Number of Columns</label>
+                    <input type="number" formControlName="columnsCount"
+                        class="form-control" id="columnsCount">
+                </div>
+                
+                <div class="col-sm-6">
+                    <label for="rowsCount" class="form-label">Number of Rows</label>
+                    <input type="number" formControlName="rowsCount"
+                        class="form-control" id="rowsCount">
+                </div>
+                
+                <div class="col-sm-6">
+                    <label for="tableHeight" class="form-label">Table Minimum Height</label>
+                    <input type="number" formControlName="tableHeight"
+                        class="form-control" id="tableHeight">
+                </div>
+
+                <div class="col-sm-6">
+                    <label for="tableWidth" class="form-label">Table Minimum Width</label>
+                    <input type="number" formControlName="tableWidth"
+                        class="form-control" id="tableWidth">
+                </div>
+                
+                <div class="col-sm-6">
+                    <label for="color" class="form-label">Color</label>
+                    <input type="color" formControlName="color"
+                        class="form-control" id="color">
+                </div>
+
+                <div class="col-sm-6">
+                    <label for="backgroundColor" class="form-label">BackgroundColor</label>
+                    <input type="color" formControlName="backgroundColor"
+                        class="form-control" id="backgroundColor">
+                </div>
+
+                <div class="col-sm-2">
+                    <label for="columnWidth" class="form-label">Column Width</label>
+                    <input type="number" formControlName="columnWidth"
+                        class="form-control" id="columnWidth">
+                </div>
+
+                <div class="col-sm-2">
+                    <label for="cellHeight" class="form-label">cell Height</label>
+                    <input type="number" formControlName="cellHeight"
+                        class="form-control" id="cellHeight">
+                </div>
+
+                <div class="col-sm-2">
+                    <label for="borderSize" class="form-label">border Size</label>
+                    <input type="number" max="5" min="0" formControlName="borderSize"
+                        class="form-control" id="borderSize">
+                </div>
+
+                <div class="col-sm-2">
+                    <label for="borderColor" class="form-label">border Color</label>
+                    <input type="color" formControlName="borderColor"
+                        class="form-control" id="borderColor">
+                </div>
+            </div>
+            <div class="row g-3"></div>
+            <br>
+            <button class="w-50 mb-2 btn btn-primary btn-sm" (click)="save()">Save</button>
+        </form>
+    </div>
+</div>

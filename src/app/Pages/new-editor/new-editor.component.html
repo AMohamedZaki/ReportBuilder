@@ -60,7 +60,8 @@
         </div>
     </div>
 </div>
-<div (mouseup)="onTextSelection()" id="quill-editor" class="ql-container ql-snow ql-editor" #editor
-    contenteditable="true" spellcheck="true" (paste)="onPaste($event)">
+<div  id="quill-editor" class="ql-container ql-snow ql-editor" #editor
+    contenteditable="true" spellcheck="true" (paste)="onPaste($event)"><p> &nbsp; </p>
 </div>
 <!-- remove ql-blank when typing-->
+<button class="w-100 mb-2 btn btn-primary btn-sm" (click)="print()">print</button>
