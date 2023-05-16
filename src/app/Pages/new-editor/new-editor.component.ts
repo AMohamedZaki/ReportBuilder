@@ -9,6 +9,7 @@ import { ColorPickerComponent } from 'src/app/components/color-picker/color-pick
 import { CloneObject } from 'src/app/Helper/helper';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TableSetting } from 'src/app/Model/TableSetting';
+import { PdfService } from 'src/app/services/pdf.service';
 
 
 
@@ -31,7 +32,9 @@ export class NewEditorComponent implements OnInit {
 
 
 
-  constructor(public dialog: MatDialog, private modalService: NgbModal) {
+  constructor(public dialog: MatDialog, private modalService: NgbModal,
+    private pdfService: PdfService
+    ) {
   }
 
   ngOnInit(): void {
@@ -241,7 +244,8 @@ export class NewEditorComponent implements OnInit {
 
 
   print() {
-    
+    const htmlContent = this.editor.nativeElement.innerHTML;
+    this.pdfService.generatePdf(htmlContent);
   }
 
 }
