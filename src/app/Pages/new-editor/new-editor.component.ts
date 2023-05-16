@@ -42,8 +42,7 @@ export class NewEditorComponent implements OnInit {
 
 
   setHeader(event: any = '') {
-    const header = event?.target?.value;
-    document.execCommand('formatBlock', false, header);
+    document.execCommand('formatBlock', false, event);
     this.editor.nativeElement.focus();
   }
 
