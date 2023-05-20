@@ -1,0 +1,8 @@
+<!-- <h4 class="mb-3">{{ title }}</h4> -->
+<ng-container [formGroup]="styleFormGroup">
+    <div *ngFor="let sModel of stylesProps" class="col-sm-6">
+        <label [for]="sModel.id" class="form-label">{{ sModel.property }}</label>
+        <input [type]="(sModel.property.indexOf('color') > -1? 'color': 'text' )" class="form-control" [id]="sModel.id" [formControlName]="sModel.property"
+            [placeholder]="sModel.property">
+    </div>
+</ng-container>
