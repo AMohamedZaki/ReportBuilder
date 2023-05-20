@@ -33,8 +33,8 @@ export class NewEditorComponent implements OnInit {
 
 
   constructor(public dialog: MatDialog, private modalService: NgbModal,
-    private pdfService: PdfService
-    ) {
+    private pdfService: PdfService, private renderer: Renderer2
+  ) {
   }
 
   ngOnInit(): void {
@@ -212,22 +212,28 @@ export class NewEditorComponent implements OnInit {
   }
 
   setColor(color: any, font = true) {
-    const selection = window.getSelection();
-    if (selection && !selection.isCollapsed && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
+    // const selection = window.getSelection();
+    // if (selection && !selection.isCollapsed && selection.rangeCount > 0) {
+    //   const range = selection.getRangeAt(0);
 
-      // Remove all span elements (in case the selected text contains span)
-      this.removeInnerSpan(range);
+    //   // Remove all span elements (in case the selected text contains span)
+    //   this.removeInnerSpan(range);
 
-      const span = document.createElement('span');
-      if (font) {
-        span.style.color = color;
-      } else {
-        span.style.backgroundColor = color;
-      }
-      range.surroundContents(span);
-      this.editor.nativeElement.focus();
-    }
+    //   const span = document.createElement('span');
+    //   if (font) {
+    //     span.style.color = color;
+    //   } else {
+    //     span.style.backgroundColor = color;
+    //   }
+    //   range.surroundContents(span);
+    //   this.editor.nativeElement.focus();
+    // }
+
+    document.execCommand('styleWithCSS', false);
+    document.execCommand('foreColor', false, color);
+    // For Back ground color
+    // document.execCommand('BackColor', false, color);
+
   }
 
   private removeInnerSpan(range: Range) {
@@ -239,8 +245,6 @@ export class NewEditorComponent implements OnInit {
     range.insertNode(textNode);
 
   }
-
-
 
   print() {
     const htmlContent = this.editor.nativeElement.innerHTML;

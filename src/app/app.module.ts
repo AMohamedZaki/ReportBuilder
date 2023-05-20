@@ -29,6 +29,7 @@ import { BlockquoteIconComponent } from './components/SvgIcons/blockquote-icon/b
 import { ImageIconComponent } from './components/SvgIcons/image-icon/image-icon.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StylePropComponent } from './components/style-prop/style-prop.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { StylePropComponent } from './components/style-prop/style-prop.component
     MatMenuModule,
     MatButtonModule,
     BrowserAnimationsModule,
-    NgbModule
+    NgbModule,
+    HttpClientModule,
     // ContentEditableModelModule
   ],
   providers: [],
