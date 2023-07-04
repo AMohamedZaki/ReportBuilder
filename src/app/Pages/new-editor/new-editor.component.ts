@@ -76,7 +76,6 @@ export class NewEditorComponent implements OnInit {
 
 
   insertTable(result: TableSetting) {
-    debugger
     const table = document.createElement('table');
     table.style.setProperty('border', `${result.borderSize}px ${result.borderStyle} ${result.borderColor}`);
     table.style.setProperty('min-width', `${result.tableWidth}px`);
@@ -187,6 +186,7 @@ export class NewEditorComponent implements OnInit {
     const marginX = event.clientX - rect.right > -10 ? 1 : event.clientX - rect.left < 10 ? -1 : 0;
     const marginY = event.clientY - rect.bottom > -10 ? 1 : event.clientY - rect.top < 10 ? -1 : 0;
     if (marginX === 0 && marginY === 0) {
+      // drag 
       return;
     }
 

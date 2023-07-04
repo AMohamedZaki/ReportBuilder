@@ -1,68 +1,97 @@
 <div class="card-body">
-    <div class="clearfix">
-        <div id="quill-toolbar" class="ql-toolbar ql-snow">
-            <span class="ql-formats">
-                <app-font-drop-dawn></app-font-drop-dawn>
-                <app-font-size-dropdown></app-font-size-dropdown>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-bold" type="button" (click)="fontStyle('bold')">
-                    <app-bold-icon></app-bold-icon>
-                </button>
-                <button class="ql-italic" type="button" (click)="fontStyle('italic')">
-                    <app-italic-icon></app-italic-icon>
-                </button>
-                <button class="ql-underline" type="button">
-                    <app-underline-icon></app-underline-icon>
-                </button>
-                <button class="ql-strike" type="button" (click)="fontStyle('strikethrough')">
-                    <app-strike-icon></app-strike-icon>
-                </button>
-            </span>
+  <div class="clearfix">
+    <div id="quill-toolbar" class="ql-toolbar ql-snow">
+      <!-- <span class="ql-formats">
+        <app-font-drop-dawn></app-font-drop-dawn>
+        <app-font-size-dropdown></app-font-size-dropdown>
+      </span> -->
+      <span class="ql-formats">
+        <button class="ql-bold" type="button" (click)="fontStyle('bold')">
+          <app-bold-icon></app-bold-icon>
+        </button>
+        <button class="ql-italic" type="button" (click)="fontStyle('italic')">
+          <app-italic-icon></app-italic-icon>
+        </button>
+        <button
+          class="ql-underline"
+          type="button"
+          (click)="fontStyle('underline')"
+        >
+          <app-underline-icon></app-underline-icon>
+        </button>
+        <button
+          class="ql-strike"
+          type="button"
+          (click)="fontStyle('strikethrough')"
+        >
+          <app-strike-icon></app-strike-icon>
+        </button>
+      </span>
 
-            <!-- (click)="setColor(color)" -->
-            <span class="ql-formats">
-                <button type="button">
-                    <app-color-picker (OnColorClick)="setColor($event.toString())">
-                        <ng-container class="icon">
-                            <app-font-icon></app-font-icon>
-                        </ng-container>
-                    </app-color-picker>
-                </button>
-                <button type="button">
-                    <app-color-picker (OnColorClick)="setColor($event.toString(), false)">
-                        <ng-container class="icon">
-                            <app-font-background></app-font-background>
-                        </ng-container>
-                    </app-color-picker>
-                </button>
+      <!-- (click)="setColor(color)" -->
+      <span class="ql-formats">
+        <button type="button">
+          <app-color-picker (OnColorClick)="setColor($event.toString())">
+            <ng-container class="icon">
+              <app-font-icon></app-font-icon>
+            </ng-container>
+          </app-color-picker>
+        </button>
+        <button type="button">
+          <app-color-picker (OnColorClick)="setColor($event.toString(), false)">
+            <ng-container class="icon">
+              <app-font-background></app-font-background>
+            </ng-container>
+          </app-color-picker>
+        </button>
+      </span>
 
-            </span>
-
-            <span class="ql-formats">
-                <button class="ql-header" value="1" type="button" (click)="setHeader('H1')">
-                    <app-header-one></app-header-one>
-                </button>
-                <button class="ql-header" value="2" type="button" (click)="setHeader('H2')">
-                    <app-header-two></app-header-two>
-                </button>
-                <!-- <button class="ql-blockquote" type="button">
+      <span class="ql-formats">
+        <button
+          class="ql-header"
+          value="1"
+          type="button"
+          (click)="setHeader('H1')"
+        >
+          <app-header-one></app-header-one>
+        </button>
+        <button
+          class="ql-header"
+          value="2"
+          type="button"
+          (click)="setHeader('H2')"
+        >
+          <app-header-two></app-header-two>
+        </button>
+        <!-- <button class="ql-blockquote" type="button">
                         <app-blockquote-icon></app-blockquote-icon>
                     </button> -->
-                <button (click)="openDialog()" type="button" class="ql-header" value="1">
-                    <i class="fa-solid fa-table"></i>
-                </button>
+        <button
+          (click)="openDialog()"
+          type="button"
+          class="ql-header"
+          value="1"
+        >
+          <i class="fa-solid fa-table"></i>
+        </button>
 
-                <button class="ql-image" type="button">
-                    <app-image-icon></app-image-icon>
-                </button>
-            </span>
-        </div>
+        <button class="ql-image" type="button">
+          <app-image-icon></app-image-icon>
+        </button>
+      </span>
     </div>
+  </div>
 </div>
-<div  id="quill-editor" class="ql-container ql-snow ql-editor" #editor
-    contenteditable="true" spellcheck="true" (paste)="onPaste($event)">
-</div>
+<div
+  id="quill-editor"
+  class="ql-container ql-snow ql-editor"
+  #editor
+  contenteditable="true"
+  spellcheck="true"
+  (paste)="onPaste($event)"
+></div>
 <!-- remove ql-blank when typing-->
-<br>
-<button class="w-20 mb-2 btn btn-primary btn-sm" (click)="print()">print</button>
+<br />
+<button class="w-20 mb-2 btn btn-primary btn-sm" (click)="print()">
+  print
+</button>
