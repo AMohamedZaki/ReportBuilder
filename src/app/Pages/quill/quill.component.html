@@ -1,0 +1,55 @@
+<p-editor #editor [(ngModel)]="text" [style]="{'height':'320px'}">
+    <ng-template pTemplate="header">
+      <div class="ql-toolbar ql-snow">
+        <span class="ql-formats">
+          <select class="ql-font"></select>
+          <select class="ql-size"></select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-bold"></button>
+          <button class="ql-italic"></button>
+          <button class="ql-underline"></button>
+          <button class="ql-strike"></button>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-color"></select>
+          <select class="ql-background"></select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-script" value="sub"></button>
+          <button class="ql-script" value="super"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-header" value="1"></button>
+          <button class="ql-header" value="2"></button>
+          <button class="ql-blockquote"></button>
+          <button class="ql-code-block"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-list" value="ordered"></button>
+          <button class="ql-list" value="bullet"></button>
+          <button class="ql-indent" value="-1"></button>
+          <button class="ql-indent" value="+1"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-direction" value="rtl"></button>
+          <select class="ql-align"></select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-image"></button>
+        </span>
+        <span class="ql-formats">
+          <button (click)="openDialog()" type="button" value="T">
+            <i class="fa-solid fa-table"></i>
+        </button>
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="customButton">
+        <button type="button" class="ql-custom-button">Custom Button</button>
+      </ng-template>
+  </p-editor>
+
+  <br>
+<button (click)="openDialog()">console The Result</button>
+<button class="w-20 mb-2 btn btn-primary btn-sm" (click)="print()">print</button>

@@ -6,7 +6,7 @@ import { saveAs } from 'file-saver';
   providedIn: 'root'
 })
 export class PdfService {
-  private apiUrl = 'https://localhost:7206/api/Report/GeneratePdf';
+  private apiUrl = 'https://localhost:7264/api/Report/GeneratePdf';
   constructor(private http: HttpClient) { }
 
 

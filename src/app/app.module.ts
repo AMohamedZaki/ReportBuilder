@@ -30,6 +30,8 @@ import { ImageIconComponent } from './components/SvgIcons/image-icon/image-icon.
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StylePropComponent } from './components/style-prop/style-prop.component';
 import { HttpClientModule } from '@angular/common/http';
+import { QuillComponent } from './Pages/quill/quill.component';
+import { EditorModule } from 'primeng/editor';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,8 @@ import { HttpClientModule } from '@angular/common/http';
     HeaderTwoComponent,
     BlockquoteIconComponent,
     ImageIconComponent,
-    StylePropComponent
+    StylePropComponent,
+    QuillComponent
   ],
   imports: [
     BrowserModule,
@@ -63,6 +66,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule,
     NgbModule,
     HttpClientModule,
+    EditorModule
     // ContentEditableModelModule
   ],
   providers: [],

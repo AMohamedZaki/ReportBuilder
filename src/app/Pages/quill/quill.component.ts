@@ -1,77 +1,59 @@
-import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
-
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { OverlayConfig } from '@angular/cdk/overlay';
-import { TableSettingComponent } from 'src/app/Dialogs/table-setting/table-setting.component';
-import { ColorPickerComponent } from 'src/app/components/color-picker/color-picker.component';
-import { CloneObject } from 'src/app/Helper/helper';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Editor } from 'primeng/editor';
+import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
+import { TableSettingComponent } from 'src/app/Dialogs/table-setting/table-setting.component';
 import { TableSetting } from 'src/app/Model/TableSetting';
 import { PdfService } from 'src/app/services/pdf.service';
 
+import Quill from 'quill';
 
+const Embed = Quill.import('blots/embed');
+
+class TableBlot extends Embed {
+  static create(value: string) {
+    const node = super.create(value);
+    node.innerHTML = value;
+    return node;
+  }
+
+  static value(node: any) {
+    return node.innerHTML;
+  }
+}
+
+Quill.register(TableBlot);
 
 @Component({
-  selector: 'app-new-editor',
-  templateUrl: './new-editor.component.html',
-  styleUrls: ['./new-editor.component.scss']
+  selector: 'app-quill',
+  templateUrl: './quill.component.html',
+  styleUrls: ['./quill.component.scss']
 })
-export class NewEditorComponent implements OnInit {
+export class QuillComponent implements AfterViewInit {
 
-  title = 'TextEditor';
+  @ViewChild('editor') editor: Editor | undefined;
+  text: string = '';
 
-  @ViewChild('editor') editor: ElementRef = {} as ElementRef<any>;
-  @ViewChild('fontcolor') fontcolor: ColorPickerComponent = {} as ColorPickerComponent;
-  @ViewChild('columnToResize') columnToResize = {} as any;
-  htmlWithBold = '';
-  displayFontColorDisplayed = false;
-  selectedColor = '';
-  displayColorPicker = false;
+  constructor(private pdfService: PdfService, private modalService: NgbModal) {
 
-
-
-  constructor(public dialog: MatDialog, private modalService: NgbModal,
-    private pdfService: PdfService, private renderer: Renderer2
-  ) {
   }
-
-  ngOnInit(): void {
-  }
-
-
-  setHeader(event: any = '') {
-    document.execCommand('formatBlock', false, event);
-    this.editor.nativeElement.focus();
-  }
-
-  insertQuote() {
-    const selection = <Selection>window.getSelection();
-    let range = selection.getRangeAt(0);
-
-    let quoteElement = document.createElement('span');
-    quoteElement.innerHTML = '&gt;'; // HTML code for >
-
-    range.insertNode(quoteElement);
-
-    range.setStartAfter(quoteElement);
-    range.setEndAfter(quoteElement);
-    selection.removeAllRanges();
-    selection.addRange(range);
-
-    this.editor.nativeElement.focus();
+  
+  getValue() {
+    const delta = (this.editor as Editor).getQuill().getContents();
+    const converter = new QuillDeltaToHtmlConverter(delta.ops, {});
+    const html = converter.convert();
+    return html;
+    // console.log(output)
+    // return output;
   }
 
   openDialog() {
-
     const modalRef = this.modalService.open(TableSettingComponent, { size: 'xl', scrollable: true });
     modalRef.result.then((result: TableSetting) => {
       this.insertTable(result);
     }, (err) => {
       return false;
     });
-
   }
 
 
@@ -104,33 +86,20 @@ export class NewEditorComponent implements OnInit {
 
       table.appendChild(dataRow);
     }
+    const editor = (this.editor as Editor);
+    const range = editor.getQuill().getSelection(true);
+    //editor.writeValue(table.outerHTML);
+    editor.quill.root.appendChild(table);
 
-    this.editor.nativeElement.appendChild(table);
-  }
+    const tableHtml = table.outerHTML;
+    editor.quill.insertEmbed(editor.quill.getSelection().index, 'table', tableHtml, 'user');
 
-  indentOutdentCommand(command: string) {
-    this.editor.nativeElement.focus();
-    document.execCommand(command, false, undefined);
+    // editor.getQuill().getModule('htmlEditButton').insertHTML(table.outerHTML, range.index);
   }
-
-  fontStyle(font = '') {
-    document.execCommand(font, false);
-  }
-
-  isFontBold(element: HTMLElement): boolean {
-    const fontWeight = window.getComputedStyle(element).getPropertyValue('font-weight');
-    return fontWeight === 'bold' || parseInt(fontWeight, 10) >= 700;
-  }
-
-  public getContentAsHtml(): void {
-    this.htmlWithBold = '';
-    const contentElement = document.createElement('div');
-    contentElement.innerHTML = this.editor.nativeElement.innerHTML;
-    this.htmlWithBold = contentElement.innerHTML;
-    console.log(this.htmlWithBold);
-  }
+  
 
   onPaste(event: any) {
+    
     const items = (event.clipboardData || event.originalEvent.clipboardData).items;
     for (const item of items) {
       if (item.type.indexOf('image') === 0) {
@@ -145,6 +114,7 @@ export class NewEditorComponent implements OnInit {
   }
 
   insertImage(event: any, src: string) {
+    const editor = (this.editor as Editor);
     let wrapper: any = null;
     const img = document.createElement('img');
     // img.src = loadEvent.;
@@ -173,7 +143,7 @@ export class NewEditorComponent implements OnInit {
     }
     else {
       wrapper.appendChild(img);
-      this.editor.nativeElement.appendChild(wrapper);
+      editor.getQuill().appendChild(wrapper);
     }
   }
 
@@ -218,18 +188,33 @@ export class NewEditorComponent implements OnInit {
     document.addEventListener('mouseup', onMouseUp);
   }
 
-  setColor(color: any, font = true) {
-    const command = (font) ? 'foreColor' : 'BackColor';
-    document.execCommand('styleWithCSS', false);
-    document.execCommand(command, false, color);
-  }
-
   print() {
-    const htmlContent = this.editor.nativeElement.innerHTML;
+    const htmlContent = this.getValue();
     this.pdfService.generatePdf(htmlContent);
   }
 
+  ngAfterViewInit() {
+    // const editor = new Quill('#editor', {
+    //   theme: 'snow',
+    //   modules: {
+    //     toolbar: {
+    //       container: [
+    //         ['bold', 'italic', 'underline', 'strike'],
+    //         [{ 'header': 1 }, { 'header': 2 }],
+    //         [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    //         [{ 'indent': '-1' }, { 'indent': '+1' }],
+    //         [{ 'align': [] }],
+    //         [{ 'color': [] }, { 'background': [] }],
+    //         ['image'],
+    //         [{ 'script': 'sub' }, { 'script': 'super' }],
+    //         ['clean']
+    //       ]
+    //     },
+    //     clipboard: {
+    //       matchVisual: false
+    //     }
+    //   }
+    // });
+  }
+
 }
-
-
-
