@@ -1,14 +1,19 @@
-
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 
 
 
 .ql-snow .ql-color-picker .ql-picker-item {
-    border: 1px solid transparent;
-    float: left;
-    height: 16px !important;
-    width: 16px !important;
-    margin: 2px;
-    padding: 0px;
+  border: 1px solid transparent;
+  float: left;
+  height: 16px !important;
+  width: 16px !important;
+  margin: 2px;
+  padding: 0px;
+}
+
+.editable-div {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: right !important;
 }

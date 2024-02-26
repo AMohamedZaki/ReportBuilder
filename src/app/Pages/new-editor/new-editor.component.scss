@@ -8,3 +8,15 @@
 .ql-container {
     min-height: 400px;
 }
+
+
+table {
+    width: 50%;
+}
+
+table.fixed {
+    table-layout: fixed;
+}
+table.fixed td {
+    overflow: hidden;
+}

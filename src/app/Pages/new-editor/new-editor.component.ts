@@ -81,11 +81,12 @@ export class NewEditorComponent implements OnInit {
     table.style.setProperty('min-width', `${result.tableWidth}px`);
     table.style.setProperty('min-height', `${result.tableHeight}px`);
     table.style.setProperty('color', `${result.color}`);
+    table.style.setProperty('table-layout', `fixed`);
     table.style.setProperty('background-color', `${result.backgroundColor}`);
 
     for (let rowIndex = 0; rowIndex < result.rowsCount; rowIndex++) {
       const dataRow = document.createElement('tr');
-      dataRow.style.setProperty('border', `${result.borderSize}px ${result.borderStyle} ${result.borderColor}`);
+     // dataRow.style.setProperty('border', `${result.borderSize}px ${result.borderStyle} ${result.borderColor}`);
 
       // Add td For Each tr
       for (let columnIndex = 0; columnIndex < result.columnsCount; columnIndex++) {
