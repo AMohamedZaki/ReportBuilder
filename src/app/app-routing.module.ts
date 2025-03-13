@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { OldEditorComponent } from './Pages/old-editor/old-editor.component';
 import { NewEditorComponent } from './Pages/new-editor/new-editor.component';
-import { QuillComponent } from './Pages/quill/quill.component';
 
 const routes: Routes = [
   {
@@ -12,12 +11,7 @@ const routes: Routes = [
   {
     path: 'old', 
     component: OldEditorComponent,
-  },
-  {
-    path: 'quill', 
-    component: QuillComponent,
   }
-
 ];
 
 @NgModule({

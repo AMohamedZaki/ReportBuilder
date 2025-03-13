@@ -20,3 +20,27 @@ table.fixed {
 table.fixed td {
     overflow: hidden;
 }
+
+
+.resizable-table th {
+    cursor: col-resize;
+  }
+  
+  .resizable-table th:last-child {
+    cursor: default; /* Prevent resizing the last column */
+  }
+  .resizable-table th {
+    cursor: col-resize;
+    position: relative; /* Added position: relative for handle positioning */
+  }
+  
+  .resize-handle {
+    position: absolute; /* Position the handle absolutely within the th */
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%); /* Center the handle vertically */
+    width: 5px; /* Set handle width */
+    height: 100%; /* Set handle height */
+    background-color: #ddd; /* Optional styling for visibility */
+    cursor: col-resize; /* Ensure handle has resize cursor */
+  }

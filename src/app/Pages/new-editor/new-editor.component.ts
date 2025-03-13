@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -10,6 +10,7 @@ import { CloneObject } from 'src/app/Helper/helper';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TableSetting } from 'src/app/Model/TableSetting';
 import { PdfService } from 'src/app/services/pdf.service';
+import { TextEditorService } from 'src/app/services/text-editor-service.service';
 
 
 
@@ -33,7 +34,8 @@ export class NewEditorComponent implements OnInit {
 
 
   constructor(public dialog: MatDialog, private modalService: NgbModal,
-    private pdfService: PdfService, private renderer: Renderer2
+    private textEditorService: TextEditorService,
+    private pdfService: PdfService, private el: ElementRef
   ) {
   }
 
@@ -231,7 +233,39 @@ export class NewEditorComponent implements OnInit {
     this.pdfService.generatePdf(htmlContent);
   }
 
+
+  @Input() columns: Column[] = [ { index: 1, title: 'asdasd'}, { index: 1, title: 'asdasd'}];
+  @Input() data: any[][] = [];
+  resizingColumnIndex: number | null = null;
+  startX: number | null = null;
+
+  onMouseDown(event: MouseEvent, columnIndex: number) {
+    if (event.button === 0) { // Check for left click
+      this.resizingColumnIndex = columnIndex;
+      this.startX = event.clientX;
+      document.body.addEventListener('mousemove', this.onMouseMove);
+      document.body.addEventListener('mouseup', this.onMouseUp, { once: true }); // Remove on first mouseup
+    }
+  }
+  
+
+  onMouseMove(event: MouseEvent) {
+    if (this.resizingColumnIndex !== null && this.startX !== null) {
+      const newWidth = event.clientX - this.startX + 'px';
+      this.el.nativeElement.querySelector(`th:nth-child(${this.resizingColumnIndex + 1})`).style.width = newWidth;
+    }
+  }
+
+  onMouseUp() {
+    this.resizingColumnIndex = null;
+    this.startX = null;
+    document.body.removeEventListener('mousemove', this.onMouseMove);
+  }
 }
 
 
 
+interface Column {
+  title: string;
+  index: number;
+}

@@ -66,3 +66,18 @@
 <button class="w-20 mb-2 btn btn-primary btn-sm" (click)="print()">
   print
 </button>
+
+<table class="resizable-table">
+  <thead>
+    <tr>
+      <th *ngFor="let column of columns" (mousedown)="onMouseDown($event, column.index)">
+        {{ column.title }}
+      </th>
+    </tr>
+  </thead>npm install ngx-resizable
+  <tbody>
+    <tr *ngFor="let row of data">
+      <td *ngFor="let cell of row">{{ cell }}</td>
+    </tr>
+  </tbody>
+</table>

@@ -30,8 +30,7 @@ import { ImageIconComponent } from './components/SvgIcons/image-icon/image-icon.
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StylePropComponent } from './components/style-prop/style-prop.component';
 import { HttpClientModule } from '@angular/common/http';
-import { QuillComponent } from './Pages/quill/quill.component';
-import { EditorModule } from 'primeng/editor';
+import { ColumnResizableDirective } from './Directive/column-resizable.directive';
 
 @NgModule({
   declarations: [
@@ -53,7 +52,7 @@ import { EditorModule } from 'primeng/editor';
     BlockquoteIconComponent,
     ImageIconComponent,
     StylePropComponent,
-    QuillComponent
+    ColumnResizableDirective
   ],
   imports: [
     BrowserModule,
@@ -66,7 +65,6 @@ import { EditorModule } from 'primeng/editor';
     BrowserAnimationsModule,
     NgbModule,
     HttpClientModule,
-    EditorModule
     // ContentEditableModelModule
   ],
   providers: [],
